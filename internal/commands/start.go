@@ -34,23 +34,22 @@ func start(ctx *ext.Context, u *ext.Update) error {
 		return dispatcher.EndGroups
 	}
 
-	// --- Send image with caption (This puts the image above the caption) ---
+	// --- Send image with caption (This is the correct way) ---
 	caption := "Hi, send me any file to get a direct streamble link to that file."
 	photoUrl := "https://envs.sh/NEV.jpg" // The URL you provided
 
-	// We use ctx.Reply.
-	// We pass the photo as a "Media" object in the third parameter (ext.Other).
-	// This tells Telegram to send the photo, and use the text as its caption.
+	// Use ctx.Reply (which works) and pass the media in ext.Other
 	_, err := ctx.Reply(u, caption, &ext.Other{
 		Media: &tg.InputMediaPhotoExternal{
 			URL: photoUrl,
 		},
 	})
 
-	// If there's an error, we return it.
+	// Just return the error. Do not use ctx.Client.Log
 	if err != nil {
 		return err
 	}
 
 	return dispatcher.EndGroups
 }
+
