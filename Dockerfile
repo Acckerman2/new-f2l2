@@ -1,5 +1,4 @@
-# Build stage
-FROM golang:1.21-alpine3.18 as builder
+FROM golang:1.21-alpine3.18 AS builder
 RUN apk update && apk upgrade --available && sync
 WORKDIR /app
 COPY . .
