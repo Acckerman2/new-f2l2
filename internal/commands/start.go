@@ -32,27 +32,27 @@ func start(ctx *ext.Context, u *ext.Update) error {
 	// 1. Define your caption
 	caption := "Hi, send me any file to get a direct streamble link to that file."
 
-	// 2. Choose ONE option to send your image
-	// **Note: The methods are on `ctx`, not `u`**
-	// The first argument is now `u` (the update)
-
-	// **Option A: Send a local file**
-	imagePath := "https://envs.sh/NEV.jpg" // <-- IMPORTANT: Change this path
-	_, err := ctx.ReplyPhotoPath(u, imagePath, &ext.Other{
-		Caption: caption,
-	})
-
+	// 2. Using your specified URL
+	
 	/*
-	// **Option B: Send from a URL**
-	imageURL := "https://example.com/images/welcome.png" // <-- IMPORTANT: Change this URL
-	_, err := ctx.ReplyPhotoURL(u, imageURL, &ext.Other{
+	// **Option A: Send a local file**
+	imagePath := "path/to/your/start-image.jpg" 
+	_, err := ctx.ReplyPhotoPath(u, imagePath, &ext.Other{
 		Caption: caption,
 	})
 	*/
 
+	
+	// **Option B: Send from a URL**
+	imageURL := "https://envs.sh/NEV.jpg" // <-- Your link is here
+	_, err := ctx.ReplyPhotoURL(u, imageURL, &ext.Other{
+		Caption: caption,
+	})
+	
+
 	/*
 	// **Option C: Send using a Telegram File ID (Most efficient)**
-	fileID := "AgACAgUAAxI...<your_file_id>" // <-- IMPORTANT: Change this File ID
+	fileID := "AgACAgUAAxI...<your_file_id>" 
 	_, err := ctx.ReplyPhotoID(u, fileID, &ext.Other{
 		Caption: caption,
 	})
