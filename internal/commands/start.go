@@ -27,40 +27,41 @@ func start(ctx *ext.Context, u *ext.Update) error {
 		return dispatcher.EndGroups
 	}
 
-	// --- MODIFICATION START ---
+	// --- MODIFICATION START (Corrected) ---
 
 	// 1. Define your caption
 	caption := "Hi, send me any file to get a direct streamble link to that file."
 
 	// 2. Choose ONE option to send your image
-	
+	// **Note: The methods are on `ctx`, not `u`**
+	// The first argument is now `u` (the update)
+
 	// **Option A: Send a local file**
-	// The path must be accessible by your bot's process.
 	imagePath := "https://envs.sh/NEV.jpg" // <-- IMPORTANT: Change this path
-	_, err := u.ReplyPhotoPath(imagePath, &ext.Other{
+	_, err := ctx.ReplyPhotoPath(u, imagePath, &ext.Other{
 		Caption: caption,
 	})
 
 	/*
 	// **Option B: Send from a URL**
 	imageURL := "https://example.com/images/welcome.png" // <-- IMPORTANT: Change this URL
-	_, err := u.ReplyPhotoURL(imageURL, &ext.Other{
+	_, err := ctx.ReplyPhotoURL(u, imageURL, &ext.Other{
 		Caption: caption,
 	})
 	*/
 
 	/*
 	// **Option C: Send using a Telegram File ID (Most efficient)**
-	// Get this by sending your photo to @FileID_Bot or similar
 	fileID := "AgACAgUAAxI...<your_file_id>" // <-- IMPORTANT: Change this File ID
-	_, err := u.ReplyPhotoID(fileID, &ext.Other{
+	_, err := ctx.ReplyPhotoID(u, fileID, &ext.Other{
 		Caption: caption,
 	})
 	*/
 
-	// 3. Add error handling (optional but recommended)
+	// 3. Add error handling (Corrected)
 	if err != nil {
-		ctx.Log.Errorf("Failed to send start photo: %v", err)
+		// **Note: Logging is on `ctx.Client.Log`**
+		ctx.Client.Log.Errorf("Failed to send start photo: %v", err)
 		// Fallback to sending text only if the photo fails
 		ctx.Reply(u, caption, nil)
 	}
