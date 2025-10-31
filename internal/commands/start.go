@@ -8,6 +8,7 @@ import (
 	"github.com/celestix/gotgproto/dispatcher/handlers"
 	"github.com/celestix/gotgproto/ext"
 	"github.com/celestix/gotgproto/storage"
+	"github.com/gotd/td/tg" // <-- This import is required
 )
 
 // LoadStart registers the /start command handler
@@ -33,20 +34,22 @@ func start(ctx *ext.Context, u *ext.Update) error {
 		return dispatcher.EndGroups
 	}
 
-	// --- Send image with caption ---
+	// --- Send image with caption (This puts the image above the caption) ---
 	caption := "Hi, send me any file to get a direct streamble link to that file."
 	photoUrl := "https://envs.sh/NEV.jpg" // The URL you provided
 
-	// Use the photoUrl variable to send the photo
-	_, err := ctx.ReplyPhotoURL(u, photoUrl, &ext.Other{
-		Caption: caption,
+	// We use ctx.Reply.
+	// We pass the photo as a "Media" object in the third parameter (ext.Other).
+	// This tells Telegram to send the photo, and use the text as its caption.
+	_, err := ctx.Reply(u, caption, &ext.Other{
+		Media: &tg.InputMediaPhotoExternal{
+			URL: photoUrl,
+		},
 	})
 
-	// Add error handling
+	// If there's an error, we return it.
 	if err != nil {
-		ctx.Client.Log.Errorf("Failed to send start photo: %v", err)
-		// Fallback to sending text only if the photo fails
-		ctx.Reply(u, caption, nil)
+		return err
 	}
 
 	return dispatcher.EndGroups
