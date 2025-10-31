@@ -30,7 +30,7 @@ func start(ctx *ext.Context, u *ext.Update) error {
 	}
 
 	// --- Send image with caption and button ---
-	photoUrl := "https://example.com/welcome.jpg" // 🔹 Replace with your image URL
+	photoUrl := "https://envs.sh/NEV.jpg" // 🔹 Replace with your image URL
 
 	// Inline keyboard button markup
 	keyboard := &tg.ReplyInlineMarkup{
@@ -39,7 +39,7 @@ func start(ctx *ext.Context, u *ext.Update) error {
 				Buttons: []tg.KeyboardButtonClass{
 					&tg.KeyboardButtonURL{
 						Text: "👑 Owner",
-						URL:  "https://t.me/YourUsername", // 🔹 Replace with your link
+						URL:  "https://t.me/Acckerman_r2", // 🔹 Replace with your link
 					},
 				},
 			},
