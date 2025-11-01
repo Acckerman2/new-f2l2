@@ -13,7 +13,7 @@ RUN go mod tidy
 # 3. Now copy the rest of your code
 COPY . .
 
-# 4. Build the app (this will work now)
+# 4. Build the app (this should work now)
 RUN CGO_ENABLED=0 go build -o /app/fsb -ldflags="-w -s" ./cmd/fsb
 
 FROM scratch
