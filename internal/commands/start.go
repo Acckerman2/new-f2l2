@@ -8,7 +8,7 @@ import (
 	"github.com/celestix/gotgproto/dispatcher/handlers"
 	"github.com/celestix/gotgproto/ext"
 	"github.com/celestix/gotgproto/storage"
-	"github.com/gotd/td/tg" // <-- This is NEW and REQUIRED
+	"github.com/gotd/td/tg" // <-- This import is required
 )
 
 // LoadStart registers the /start command handler
@@ -38,14 +38,14 @@ func start(ctx *ext.Context, u *ext.Update) error {
 	caption := "Hi, send me any file to get a direct streamble link to that file."
 	photoUrl := "https://envs.sh/NEV.jpg" // The URL you provided
 
-	// This is the FIX. It does NOT use ctx.ReplyPhotoURL
+	// Use ctx.Reply (which works) and pass the media in ext.Other
 	_, err := ctx.Reply(u, caption, &ext.Other{
 		Media: &tg.InputMediaPhotoExternal{
 			URL: photoUrl,
 		},
 	})
 
-	// Just return the error.
+	// Just return the error. Do not use ctx.Client.Log
 	if err != nil {
 		return err
 	}
