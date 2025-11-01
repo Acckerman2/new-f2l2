@@ -43,8 +43,8 @@ func start(ctx *ext.Context, u *ext.Update) error {
 	// This combines all our attempts into the single correct solution.
 	// 1. Use `ctx.Reply` (which we know works)
 	// 2. Use `&ext.Other{}` (which requires the 'ext' import)
-	// 3. Use `u.EffectiveChat().GetInputPeer()` (Fixes 'Peer undefined' error)
-	// 4. Use `ctx.RandomInt64()` (Fixes 'ctx.Client undefined' error)
+	// 3. Use `u.EffectiveChat().GetInputPeer()`
+	// 4. Use `ctx.Client.RandInt64()` (Fixes 'RandomInt64 undefined' error)
 	//
 	_, err := ctx.Reply(u, caption, &ext.Other{
 		Request: &tg.MessagesSendMediaRequest{
@@ -52,7 +52,7 @@ func start(ctx *ext.Context, u *ext.Update) error {
 			Media: &tg.InputMediaPhotoExternal{
 				URL: photoUrl,
 			},
-			RandomID: ctx.RandomInt64(),
+			RandomID: ctx.Client.RandInt64(),
 		},
 	})
 
