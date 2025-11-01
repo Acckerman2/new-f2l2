@@ -9,9 +9,9 @@ COPY . .
 RUN go mod tidy
 
 # 3. THIS IS THE FIX:
-# We will manually 'go get' the missing dependency
-# that 'go mod tidy' is not finding.
-RUN go get github.com/gotd/td/tg
+# We will manually 'go get' the *correct version* of the dependency
+# that matches your go.mod file (v0.105.0).
+RUN go get github.com/gotd/td@v0.105.0
 
 # 4. Build the app (this will work now)
 RUN CGO_ENABLED=0 go build -o /app/fsb -ldflags="-w -s" ./cmd/fsb
