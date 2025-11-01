@@ -36,23 +36,23 @@ func start(ctx *ext.Context, u *ext.Update) error {
 
 	// --- Send image with caption (This is the correct, working code) ---
 	caption := "Hi, send me any file to get a direct streamble link to that file."
-	photoUrl := "https.://envs.sh/NEV.jpg" // The URL you provided
+	photoUrl := "https://envs.sh/NEV.jpg" // The URL you provided
 
 	//
 	// THIS IS THE FIX:
 	// This combines all our attempts into the single correct solution.
 	// 1. Use `ctx.Reply` (which we know works)
 	// 2. Use `&ext.Other{}` (which requires the 'ext' import)
-	// 3. Use `Request:` field to send a raw API request
-	// 4. Use `&tg.MessagesSendMediaRequest{}` (for sending media, not text)
+	// 3. Use `u.EffectiveChat().GetInputPeer()` (Fixes 'Peer undefined' error)
+	// 4. Use `ctx.RandomInt64()` (Fixes 'ctx.Client undefined' error)
 	//
 	_, err := ctx.Reply(u, caption, &ext.Other{
 		Request: &tg.MessagesSendMediaRequest{
-			Peer:     u.EffectiveChat().Peer, // Add Peer
+			Peer:     u.EffectiveChat().GetInputPeer(),
 			Media: &tg.InputMediaPhotoExternal{
 				URL: photoUrl,
 			},
-			RandomID: ctx.Client.RandInt64(), // Add RandomID
+			RandomID: ctx.RandomInt64(),
 		},
 	})
 
