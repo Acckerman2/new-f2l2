@@ -23,7 +23,7 @@ async def start(_, m: Message):
         # --- THIS IS THE NEW PART ---
         reply_markup=InlineKeyboardMarkup(
             [
-                [InlineKeyboardButton("👑 Owner", url="https.t.me/Acckerman_r2")]
+                [InlineKeyboardButton("👑 Owner", url="https://t.me/Acckerman_r2")]
                 # You can change the URL to your own Telegram link
             ]
         )
