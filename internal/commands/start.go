@@ -35,15 +35,10 @@ func start(ctx *ext.Context, u *ext.Update) error {
 	}
 
 	// --- Send image with caption (This is the correct way) ---
-	
-	// This is your caption
 	caption := "Hi, send me any file to get a direct streamble link to that file."
-	
-	// This is your image URL
-	photoUrl := "https://envs.sh/NEV.jpg" 
+	photoUrl := "https://envs.sh/NEV.jpg" // The URL you provided
 
-	// This function sends the photo AND the caption.
-	// Telegram automatically puts the photo above the caption.
+	// Use ctx.Reply (which works) and pass the media in ext.Other
 	_, err := ctx.Reply(u, caption, &ext.Other{
 		Media: &tg.InputMediaPhotoExternal{
 			URL: photoUrl,
