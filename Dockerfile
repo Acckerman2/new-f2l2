@@ -2,18 +2,13 @@ FROM golang:1.21-alpine3.18 AS builder
 RUN apk update && apk upgrade --available && sync
 WORKDIR /app
 
-# 1. Copy *only* the module files first
-COPY go.mod go.sum ./
-
-# 2. Download dependencies and run go mod tidy to fix inconsistencies
-# This is the new, important step
-RUN go mod download
-RUN go mod tidy
-
-# 3. Now copy the rest of your code
+# 1. Copy ALL your code first (this is the fix)
 COPY . .
 
-# 4. Build the app (this should work now)
+# 2. Now, go mod tidy can see your new start.go and will add the tg dependency
+RUN go mod tidy
+
+# 3. Build the app (this will work now)
 RUN CGO_ENABLED=0 go build -o /app/fsb -ldflags="-w -s" ./cmd/fsb
 
 FROM scratch
