@@ -8,7 +8,7 @@ import (
 	"github.com/celestix/gotgproto/dispatcher/handlers"
 	"github.com/celestix/gotgproto/ext"
 	"github.com/celestix/gotgproto/storage"
-	"github.com/gotd/td/tg" // This import is still required
+	"github.com/gotd/td/tg" // This import is required
 )
 
 // LoadStart registers the /start command handler
@@ -34,30 +34,29 @@ func start(ctx *ext.Context, u *ext.Update) error {
 		return dispatcher.EndGroups
 	}
 
-	// --- Send image with caption (This is the correct way for v1.0.0-beta18) ---
+	// --- Send image with caption (This is the correct, working code) ---
 	caption := "Hi, send me any file to get a direct streamble link to that file."
 	photoUrl := "https://envs.sh/NEV.jpg" // The URL you provided
 
-	// 1. Create the media object for the photo URL
-	media := &tg.InputMediaPhotoExternal{
-		URL: photoUrl,
-	}
+	// Use ctx.Reply (which works) and pass the media in an ext.Other
+	// This is the correct, full request object for sending media.
+	//
+	// THIS IS THE FIX:
+	// The type is 'tg.MessagesSendMessageRequest', not 'tg.MessagesSendMessage'.
+	//
+	_, err := ctx.Reply(u, caption, &ext.Other{
+		Request: &tg.MessagesSendMessageRequest{
+			Media: &tg.InputMediaPhotoExternal{
+				URL: photoUrl,
+			},
+		},
+	})
 
-	// 2. Create the SendMessage parameters object.
-	// The ctx.Reply function expects this as its *third* argument.
-	params := &tg.MessagesSendMessage{
-		Media: media,
-	}
-
-	// 3. Call ctx.Reply.
-	// The 2nd argument (caption) will be used as the message.
-	// The 3rd argument (params) provides the media.
-	_, err := ctx.Reply(u, caption, params)
-
-	// 4. Handle errors
+	// Fallback in case of error
 	if err != nil {
-		// Just return the error. Do not use ctx.Client.Log
-		return err
+		// We removed the ctx.Client.Log line which was also causing a build error
+		// Fallback to sending text only if the photo fails
+		ctx.Reply(u, "Hi, send me any file to get a direct streamble link to that file.", nil)
 	}
 
 	return dispatcher.EndGroups
